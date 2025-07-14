@@ -6,6 +6,12 @@ import SwipeableList from "@/components/SlideableList";
 import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
 import { deleteAsyncData } from "../../../utils/asyncDataOperation";
 import { useNavigation } from "@react-navigation/native";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 export default function Task() {
   const navigation = useNavigation();
@@ -106,6 +112,29 @@ export default function Task() {
         </TouchableOpacity>
       </View>
 
+      <View style={{ padding: 20, alignItems: "flex-end" }}>
+        <Menu onSelect={(value) => console.log("Selected option:", value)}>
+          <MenuTrigger>
+            <View style={styles.menuTrigger}>
+              <Text style={styles.menuTriggerText}>☰ Filters</Text>
+            </View>
+          </MenuTrigger>
+          <MenuOptions customStyles={{ optionsContainer: styles.menuOptions }}>
+            <MenuOption value="edit">
+              <Text style={styles.menuItem}>Edit</Text>
+            </MenuOption>
+            <MenuOption value="delete">
+              <Text style={[styles.menuItem, { color: "red" }]}>Delete</Text>
+            </MenuOption>
+            <MenuOption value="archive" disabled={true}>
+              <Text style={[styles.menuItem, { color: "gray" }]}>
+                Archive (Disabled)
+              </Text>
+            </MenuOption>
+          </MenuOptions>
+        </Menu>
+      </View>
+
       <View style={styles.calenderView}>
         <View style={styles.mainCalenderView}>
           <SwipeableList data={userTaskData} handleDelete={handleDelete} />
@@ -173,5 +202,27 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 25,
+  },
+  menuTrigger: {
+    backgroundColor: "#eee",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+
+  menuTriggerText: {
+    fontSize: 16,
+    color: "#333",
+    fontWeight: "500",
+  },
+
+  menuItem: {
+    padding: 10,
+    fontSize: 16,
+  },
+
+  menuOptions: {
+    padding: 5,
+    borderRadius: 8,
   },
 });

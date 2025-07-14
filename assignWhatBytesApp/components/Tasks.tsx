@@ -8,6 +8,7 @@ interface TaskProps {
     text: string;
     time: string;
     priority: Priority;
+    status: string
 }
 
 const getPriorityColor = (priority: Priority): string => {
@@ -22,7 +23,7 @@ const getPriorityColor = (priority: Priority): string => {
             return 'gray';
     }
 };
-export default function Tasks({ text, time, priority }: TaskProps) {
+export default function Tasks({ text, time, priority, status }: TaskProps) {
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
@@ -34,7 +35,17 @@ export default function Tasks({ text, time, priority }: TaskProps) {
                             :
                             <Text style={styles.itemText}>{text}</Text>
                     }
-                    <Text style={styles.itemTime}>{time}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={styles.itemTime}>{time}</Text>
+                        <Text
+                            style={[
+                                styles.itemTime,
+                                { color: status === "Incomplete" ? "red" : "green" },
+                            ]}
+                        >
+                            ({status})
+                        </Text>
+                    </View>
                 </View>
             </View>
 
@@ -81,7 +92,8 @@ const styles = StyleSheet.create({
     },
     itemTime: {
         maxWidth: '100%',
-        color: '#616161ff'
+        color: '#616161ff',
+        margin: 1
     },
     circular: {
         width: 20,

@@ -18,7 +18,6 @@ const ListItem = memo(({ item, onDelete }) => {
     <View style={styles.actionsContainer}>
       <TouchableOpacity
         onPress={() => onDelete(item.id)}
-
         style={[styles.button, styles.delete]}
       >
         <IconSymbol size={25} name="delete.left.fill" color={`#fff`} />
@@ -32,7 +31,12 @@ const ListItem = memo(({ item, onDelete }) => {
       activeOffsetX={[-30, 30]}
       failOffsetY={[-30, 30]}
     >
-      <Tasks text={item.text} time={item.time} priority={item.priority} />
+      <Tasks
+        text={item.text}
+        time={item.time}
+        priority={item.priority}
+        status={item.status}
+      />
     </Swipeable>
   );
 });
