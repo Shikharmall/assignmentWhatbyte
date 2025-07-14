@@ -25,14 +25,14 @@ export default function RootLayout() {
     },
     {
       id: 2,
-      title: 'Choose A Tasty Dish',
-      description: 'Lorem ipsum…',
+      title: 'Shows alert.',
+      description: 'Reminds you when date is near.',
       image: require('../assets/images/onboardScreen5.jpg'),
     },
     {
       id: 3,
-      title: 'Pick Up The Delivery',
-      description: 'Lorem ipsum…',
+      title: 'Start with the app.',
+      description: 'Lets Start',
       image: require('../assets/images/onboardScreen3.png'),
     },
   ];
@@ -50,7 +50,7 @@ export default function RootLayout() {
               flex: 1,
               alignItems: 'center',
               padding: 15,
-              paddingTop: 100,
+              paddingTop: 150,
             }}>
               <Image
                 source={item.image}
