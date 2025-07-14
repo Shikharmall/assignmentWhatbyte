@@ -4,9 +4,12 @@ import { useIsFocused } from "@react-navigation/native";
 import { COLORS, SIZES } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
 import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
-// import { Agenda, calendarTheme } from 'react-native-calendars'
+import { deleteAsyncData } from "../../../utils/asyncDataOperation";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Task() {
+  const navigation = useNavigation();
+
   const renderEmptyData = () => {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -29,6 +32,11 @@ export default function Task() {
     {
       id: "3",
       title: "This Week",
+      data: [],
+    },
+    {
+      id: "4",
+      title: "Upcoming Week",
       data: [],
     },
   ]);
@@ -72,12 +80,19 @@ export default function Task() {
     <View style={{ flex: 1 }}>
       <View style={styles.taskView}>
         <View style={styles.profileView}>
-          <View>
+          <TouchableOpacity
+            onPress={async () => {
+              deleteAsyncData("userId");
+              deleteAsyncData("accessToken");
+              deleteAsyncData("isLogin");
+              navigation.navigate("signin");
+            }}
+          >
             <Image
               source={require("../../../assets/images/userProfile.jpg")}
               style={styles.userProfile}
             />
-          </View>
+          </TouchableOpacity>
           <View style={styles.details}>
             <Text style={styles.mesText}>Task List</Text>
             <Text style={styles.taskText}>Upcomming Task</Text>
