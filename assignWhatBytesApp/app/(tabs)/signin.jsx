@@ -75,7 +75,7 @@ const SignInScreen = () => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../../assets/images/bg5.png")}
+        source={require("../../assets/images/bg7.png")}
         style={{
           flex: 1,
         }}
