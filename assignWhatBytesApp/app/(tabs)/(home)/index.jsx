@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-// import { Agenda } from 'react-native-calendars'
+import { useIsFocused } from "@react-navigation/native";
 import { COLORS, SIZES } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
-import {
-  getUserTasksAPI,
-  getUserTasks,
-  deleteTaskAPI,
-} from "../../../api/TaskAPI/TaskAPI";
+import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
 // import { Agenda, calendarTheme } from 'react-native-calendars'
 
 export default function Task() {
@@ -63,6 +59,14 @@ export default function Task() {
   useEffect(() => {
     getUserTasksFunc();
   }, []);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      getUserTasksFunc();
+    }
+  }, [isFocused]);
 
   return (
     <View style={{ flex: 1 }}>

@@ -37,7 +37,7 @@ export default function TabLayout() {
         name="addtask"
         options={{
           title: 'Add',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="add" color={color} />,
         }}
       />
       {/* <Tabs.Screen
