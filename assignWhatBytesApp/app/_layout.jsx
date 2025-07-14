@@ -100,7 +100,7 @@ export default function RootLayout() {
   );
 }
 
-function renderButton(label: string) {
+function renderButton(label) {
   return (
     <View style={styles.btn}>
       <Text style={styles.btnText}>{label}</Text>
