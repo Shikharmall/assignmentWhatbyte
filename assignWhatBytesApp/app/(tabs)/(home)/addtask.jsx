@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { COLORS, SIZES } from "../../../constants/Theme";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { addTaskAPI } from "../../../api/TaskAPI/TaskAPI";
+import { Dropdown } from "react-native-element-dropdown";
 export default function AddTask() {
   const [formData, setFormData] = useState({
     title: "",
@@ -20,6 +21,12 @@ export default function AddTask() {
     dueDate: new Date(),
     priority: "",
   });
+
+  const data = [
+    { label: "Low", value: "low" },
+    { label: "Medium", value: "medium" },
+    { label: "High", value: "high" },
+  ];
 
   const handleChange = (value, name) => {
     setFormData({
@@ -136,11 +143,18 @@ export default function AddTask() {
         )}
         <View style={styles.inputView}>
           <Text style={styles.label}>Priority</Text>
-          <TextInput
-            placeholder="Priority"
-            style={styles.Input}
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={data}
+            labelField="label"
+            valueField="value"
+            placeholder="Select Priority"
             value={formData?.priority}
-            onChangeText={(text) => handleChange(text, "priority")}
+            onChange={(item) => {
+              handleChange(item.value, "priority");
+            }}
           />
         </View>
         {isLoading ? (
@@ -175,10 +189,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 20,
   },
-  backArrow: {
-    width: 10,
-    height: 20,
-  },
   textAdd: {
     fontSize: 18,
     color: "white",
@@ -204,6 +214,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 10,
     fontSize: 12,
+    height: 50,
+    justifyContent: "center",
   },
   InputArea: {
     backgroundColor: COLORS.secondary,
@@ -212,6 +224,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 12,
     height: 100,
+    textAlignVertical: "top",
   },
   calenderImgs: {
     width: 23,
@@ -226,9 +239,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     alignItems: "center",
     marginTop: 10,
+    height: 50,
   },
   InputDate: {
     fontSize: 12,
+  },
+  dropdown: {
+    backgroundColor: COLORS.secondary,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginTop: 10,
+    height: 50,
+    justifyContent: "center",
+  },
+  placeholderStyle: {
+    fontSize: 12,
+    color: "#999",
+  },
+  selectedTextStyle: {
+    fontSize: 12,
+    color: "#000",
   },
   btn: {
     backgroundColor: COLORS.primary,
