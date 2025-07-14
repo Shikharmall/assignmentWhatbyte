@@ -21,6 +21,28 @@ export const addTaskAPI = async (data) => {
   }
 };
 
+// API to delete task
+
+export const deleteTaskAPI = async (taskId) => {
+  // console.log(data);
+  const token = await getAsyncData("accessToken");
+  // console.log(token);
+  try {
+    const result = await axios.delete(
+      `${API_URL_BASE}/deleteTask?taskId=${taskId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 // API to get overall response
 
 export const getUserTasksAPI = async () => {

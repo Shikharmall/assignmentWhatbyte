@@ -3,7 +3,11 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 // import { Agenda } from 'react-native-calendars'
 import { COLORS, SIZES } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
-import { getUserTasksAPI, getUserTasks } from "../../../api/TaskAPI/TaskAPI";
+import {
+  getUserTasksAPI,
+  getUserTasks,
+  deleteTaskAPI,
+} from "../../../api/TaskAPI/TaskAPI";
 // import { Agenda, calendarTheme } from 'react-native-calendars'
 
 export default function Task() {
@@ -43,6 +47,19 @@ export default function Task() {
     });
   };
 
+  const handleDelete = (taskId) => {
+    console.log(taskId);
+    deleteTaskAPI(taskId).then((res) => {
+      if (res.status === 201) {
+        getUserTasksFunc();
+        // console.log(res);
+        // setIsLoading(false);
+      } else {
+        // setIsLoading(false);
+      }
+    });
+  };
+
   useEffect(() => {
     getUserTasksFunc();
   }, []);
@@ -59,7 +76,6 @@ export default function Task() {
           </View>
           <View style={styles.details}>
             <Text style={styles.mesText}>Task List</Text>
-
             <Text style={styles.taskText}>Upcomming Task</Text>
           </View>
         </View>
@@ -73,7 +89,7 @@ export default function Task() {
 
       <View style={styles.calenderView}>
         <View style={styles.mainCalenderView}>
-          <SwipeableList data={userTaskData} />
+          <SwipeableList data={userTaskData} handleDelete={handleDelete} />
         </View>
       </View>
     </View>

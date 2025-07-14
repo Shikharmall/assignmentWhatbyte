@@ -17,7 +17,7 @@ const ListItem = memo(({ item, onDelete }) => {
   const renderRightActions = () => (
     <View style={styles.actionsContainer}>
       <TouchableOpacity
-        //onPress={() => onDelete(item.id)}
+        onPress={() => onDelete(item.id)}
 
         style={[styles.button, styles.delete]}
       >
@@ -39,10 +39,10 @@ const ListItem = memo(({ item, onDelete }) => {
 
 const ITEM_HEIGHT = 60;
 
-const SwipeableList = ({data}) => {
-  const handleDelete = useCallback((id) => {
-    console.log("Delete:", id);
-  }, []);
+const SwipeableList = ({ data, handleDelete }) => {
+  // const handleDelete = useCallback((id) => {
+  //   console.log("Delete:", id);
+  // }, []);
 
   const renderItem = useCallback(
     ({ item }) => <ListItem item={item} onDelete={handleDelete} />,

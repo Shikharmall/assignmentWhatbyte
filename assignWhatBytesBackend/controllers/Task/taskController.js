@@ -178,10 +178,13 @@ const deleteTask = async (req, res) => {
   try {
     const { taskId } = req.query;
 
-    const deletedData = await Task.deleteOne({ taskId: taskId });
+    console.log(taskId);
+
+    // const deletedData = await Task.deleteOne({ taskId });
+    const deletedData = await Task.findByIdAndDelete(taskId);
 
     if (deletedData) {
-      return res.status(201).json({ status: "success", data: deleteData });
+      return res.status(201).json({ status: "success", data: deletedData });
     }
   } catch (error) {
     res.status(500).json({ status: "failed", message: error.message });
