@@ -167,8 +167,7 @@ const getUserTaskByID = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { taskId } = req.query;
-    console.log(taskId);
-    const { title, description, priority, dueDate } = req.body;
+    const { title, description, priority, dueDate, status } = req.body;
 
     const taskData = await Task.updateOne(
       { _id: taskId },
@@ -178,6 +177,7 @@ const updateTask = async (req, res) => {
           description: description,
           dueDate: dueDate,
           priority: priority,
+          status: status,
         },
       }
     );

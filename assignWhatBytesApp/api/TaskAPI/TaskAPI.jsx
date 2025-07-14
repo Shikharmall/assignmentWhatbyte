@@ -27,7 +27,7 @@ export const updateTaskAPI = async (taskId, data) => {
   const token = await getAsyncData("accessToken");
   // console.log(token);
   try {
-    const result = await axios.post(
+    const result = await axios.patch(
       `${API_URL_BASE}/updateTask?taskId=${taskId}`,
       data,
       {
