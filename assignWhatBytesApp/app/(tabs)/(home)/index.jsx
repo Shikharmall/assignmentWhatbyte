@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { COLORS, SIZES } from "../../../constants/Theme";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
 import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
 import { deleteAsyncData } from "../../../utils/asyncDataOperation";
-import { useNavigation } from "@react-navigation/native";
 import {
   Menu,
   MenuOptions,
@@ -15,72 +14,45 @@ import {
 
 export default function Task() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
-  const renderEmptyData = () => {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>No Task for this day</Text>
-      </View>
-    );
-  };
+  const [userTaskData, setUserTasksData] = useState([]);
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const [userTaskData, setUserTasksData] = useState([
-    {
-      id: "1",
-      title: "Today",
-      data: [],
-    },
-    {
-      id: "2",
-      title: "Tomorrow",
-      data: [],
-    },
-    {
-      id: "3",
-      title: "This Week",
-      data: [],
-    },
-    {
-      id: "4",
-      title: "Upcoming Week",
-      data: [],
-    },
-  ]);
-
-  const getUserTasksFunc = () => {
-    getUserTasksAPI().then((res) => {
-      if (res.status === 200) {
-        setUserTasksData(res?.data?.data);
-      } else {
-        console.log("Data Fetching Failed!");
-      }
-    });
+  const getUserTasksFunc = (priority = "all", status = "all") => {
+    getUserTasksAPI({ priority, status })
+      .then((res) => {
+        if (res.status === 200) {
+          setUserTasksData(res?.data?.data || []);
+        } else {
+          console.log("Data Fetching Failed!");
+        }
+      })
+      .catch(console.error);
   };
 
   const handleDelete = (taskId) => {
-    console.log(taskId);
     deleteTaskAPI(taskId).then((res) => {
       if (res.status === 201) {
-        getUserTasksFunc();
-        // console.log(res);
-        // setIsLoading(false);
-      } else {
-        // setIsLoading(false);
+        getUserTasksFunc(priorityFilter, statusFilter);
       }
     });
   };
 
   useEffect(() => {
-    getUserTasksFunc();
-  }, []);
-
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
     if (isFocused) {
-      getUserTasksFunc();
+      getUserTasksFunc(priorityFilter, statusFilter);
     }
-  }, [isFocused]);
+  }, [priorityFilter, statusFilter, isFocused]);
+
+  const onSelectPriority = (value) => {
+    setPriorityFilter(value);
+  };
+
+  const onSelectStatus = (value) => {
+    setStatusFilter(value);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -88,9 +60,9 @@ export default function Task() {
         <View style={styles.profileView}>
           <TouchableOpacity
             onPress={async () => {
-              deleteAsyncData("userId");
-              deleteAsyncData("accessToken");
-              deleteAsyncData("isLogin");
+              await deleteAsyncData("userId");
+              await deleteAsyncData("accessToken");
+              await deleteAsyncData("isLogin");
               navigation.navigate("signin");
             }}
           >
@@ -101,7 +73,7 @@ export default function Task() {
           </TouchableOpacity>
           <View style={styles.details}>
             <Text style={styles.mesText}>Task List</Text>
-            <Text style={styles.taskText}>Upcomming Task</Text>
+            <Text style={styles.taskText}>Upcoming Task</Text>
           </View>
         </View>
         <TouchableOpacity>
@@ -112,29 +84,43 @@ export default function Task() {
         </TouchableOpacity>
       </View>
 
-      <View style={{ padding: 20, alignItems: "flex-end" }}>
-        <Menu onSelect={(value) => console.log("Selected option:", value)}>
+      {/* Filters */}
+      <View style={styles.filterRow}>
+        {/* Priority filter */}
+        <Menu onSelect={onSelectPriority}>
           <MenuTrigger>
             <View style={styles.menuTrigger}>
-              <Text style={styles.menuTriggerText}>☰ Filters</Text>
+              <Text style={styles.menuTriggerText}>
+                Priority: {priorityFilter.toUpperCase()}
+              </Text>
             </View>
           </MenuTrigger>
           <MenuOptions customStyles={{ optionsContainer: styles.menuOptions }}>
-            <MenuOption value="edit">
-              <Text style={styles.menuItem}>Edit</Text>
-            </MenuOption>
-            <MenuOption value="delete">
-              <Text style={[styles.menuItem, { color: "red" }]}>Delete</Text>
-            </MenuOption>
-            <MenuOption value="archive" disabled={true}>
-              <Text style={[styles.menuItem, { color: "gray" }]}>
-                Archive (Disabled)
+            <MenuOption value="all" text="All" />
+            <MenuOption value="low" text="Low" />
+            <MenuOption value="medium" text="Medium" />
+            <MenuOption value="high" text="High" />
+          </MenuOptions>
+        </Menu>
+
+        {/* Status filter */}
+        <Menu onSelect={onSelectStatus}>
+          <MenuTrigger>
+            <View style={styles.menuTrigger}>
+              <Text style={styles.menuTriggerText}>
+                Status: {statusFilter.toUpperCase()}
               </Text>
-            </MenuOption>
+            </View>
+          </MenuTrigger>
+          <MenuOptions customStyles={{ optionsContainer: styles.menuOptions }}>
+            <MenuOption value="all" text="All" />
+            <MenuOption value="completed" text="Completed" />
+            <MenuOption value="incomplete" text="Incomplete" />
           </MenuOptions>
         </Menu>
       </View>
 
+      {/* Task List */}
       <View style={styles.calenderView}>
         <View style={styles.mainCalenderView}>
           <SwipeableList data={userTaskData} handleDelete={handleDelete} />
@@ -170,12 +156,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
     fontWeight: "bold",
-    // fontSize: SIZES.h4,
-    // fontFamily:Fonts.BOLD
   },
   taskText: {
     color: "white",
-    // fontFamily:Fonts.MEDIUM
   },
   notiImg: {
     width: 25,
@@ -192,37 +175,31 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  stickyCircle: {
-    position: "absolute",
-    bottom: 30,
-    right: 25,
-    borderRadius: 25,
-  },
-  addImg: {
-    width: 60,
-    height: 60,
-    borderRadius: 25,
+  filterRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    padding: 15,
+    backgroundColor: "#fff",
   },
   menuTrigger: {
-    backgroundColor: "#eee",
+    backgroundColor: "#f1f1f1",
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    paddingHorizontal: 16,
     borderRadius: 8,
+    marginLeft: 8,
   },
-
   menuTriggerText: {
-    fontSize: 16,
-    color: "#333",
+    fontSize: 14,
     fontWeight: "500",
+    color: "#333",
   },
-
   menuItem: {
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     fontSize: 16,
   },
-
   menuOptions: {
-    padding: 5,
     borderRadius: 8,
+    padding: 5,
   },
 });

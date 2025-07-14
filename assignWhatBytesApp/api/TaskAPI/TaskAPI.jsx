@@ -45,7 +45,7 @@ export const deleteTaskAPI = async (taskId) => {
 
 // API to get overall response
 
-export const getUserTasksAPI = async () => {
+export const getUserTasksAPI = async ({ priority, status }) => {
   try {
     const token = await getAsyncData("accessToken");
     const userId = await getAsyncData("userId");
@@ -54,12 +54,17 @@ export const getUserTasksAPI = async () => {
       throw new Error("Missing token or userId");
     }
 
-    const response = await axios.get(`${API_URL_BASE}/getTasks`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(
+      `${API_URL_BASE}/getTasks?priority=${priority}&status=${status}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    //console.log(response.data);
 
     return response; // Return just the data for easier use
   } catch (error) {

@@ -64,7 +64,7 @@ const addTask = async (req, res) => {
         description: description,
         dueDate: dueDate,
         priority: priority,
-        status: "Incomplete",
+        status: "incomplete",
       });
 
       const taskDataSaved = await taskData.save();
@@ -83,9 +83,25 @@ const addTask = async (req, res) => {
 const getUserTasks = async (req, res) => {
   try {
     const userId = req.user.id;
-    // console.log(userId);
+    const { priority, status } = req.query;
 
-    const filter = userId ? { userId } : {};
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ status: "failed", message: "Unauthorized" });
+    }
+
+    // Build query filter
+    const filter = { userId };
+
+    if (priority && priority !== "all") {
+      filter.priority = priority.toLowerCase(); // e.g., "low", "medium", "high"
+    }
+
+    if (status && status !== "all") {
+      filter.status = status.toLowerCase(); // e.g., "completed", "incomplete"
+    }
+
     const tasks = await Task.find(filter).sort({ dueDate: 1 });
 
     const today = new Date();
@@ -120,7 +136,6 @@ const getUserTasks = async (req, res) => {
       }
     });
 
-    // Convert sections object to array
     const response = Object.entries(sections).map(([title, data], index) => ({
       id: (index + 1).toString(),
       title,
