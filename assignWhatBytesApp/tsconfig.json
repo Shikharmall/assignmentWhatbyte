@@ -1,0 +1,17 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+, "../dummy/index.tsx", "../dummy/explore.tsx", "app/(tabs)/signup.jsx", "app/(tabs)/signin.jsx", "app/(tabs)/(home)/addtask.jsx", "app/(tabs)/(home)/index.jsx", "components/SlideableList.jsx"  ]
+}
