@@ -64,6 +64,7 @@ const addTask = async (req, res) => {
         description: description,
         dueDate: dueDate,
         priority: priority,
+        status: "Incomplete",
       });
 
       const taskDataSaved = await taskData.save();
@@ -105,6 +106,7 @@ const getUserTasks = async (req, res) => {
         time: formatDate(dueDate),
         priority:
           task.priority?.charAt(0).toUpperCase() + task.priority?.slice(1),
+        status: task.status,
       };
 
       if (isSameDay(dueDate, today)) {
