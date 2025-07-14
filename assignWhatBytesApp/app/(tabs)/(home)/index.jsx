@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: COLORS.primary,
     paddingTop: 50,
-    paddingBottom: 40,
+    paddingBottom: 20,
     alignItems: "center",
   },
   profileView: {

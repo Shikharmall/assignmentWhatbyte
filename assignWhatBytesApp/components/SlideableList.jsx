@@ -32,6 +32,7 @@ const ListItem = memo(({ item, onDelete }) => {
       failOffsetY={[-30, 30]}
     >
       <Tasks
+        taskId={item.id}
         text={item.text}
         time={item.time}
         priority={item.priority}

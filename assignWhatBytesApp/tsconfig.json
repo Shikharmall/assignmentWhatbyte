@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "../dummy/index.tsx", "../dummy/explore.tsx", "app/(tabs)/signup.jsx", "app/(tabs)/signin.jsx", "app/(tabs)/(home)/addtask.jsx", "app/(tabs)/(home)/index.jsx", "components/SlideableList.jsx", "app/+not-found.jsx", "app/_layout.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/(home)/(tasks)/_layout.jsx", "app/(tabs)/(home)/_layout.jsx"  ]
+, "../dummy/index.tsx", "../dummy/explore.tsx", "app/(tabs)/signup.jsx", "app/(tabs)/signin.jsx", "app/(tabs)/(home)/addtask.jsx", "app/(tabs)/(home)/index.jsx", "components/SlideableList.jsx", "app/+not-found.jsx", "app/_layout.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/(home)/(tasks)/_layout.jsx", "app/(tabs)/(home)/_layout.jsx", "components/Tasks.jsx"  ]
 }

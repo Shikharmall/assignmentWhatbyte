@@ -7,6 +7,7 @@ export default function TabLayout() {
     <Stack>
       <Stack.Screen name="signin" options={{ headerShown: false }} />
       <Stack.Screen name="signup" options={{ headerShown: false }} />
+      <Stack.Screen name="editTask" options={{ headerShown: false }} />
       <Stack.Screen name="(home)" options={{ headerShown: false }} />
     </Stack>
   );

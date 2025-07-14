@@ -10,16 +10,23 @@ import {
   ToastAndroid,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { COLORS, SIZES } from "../../../../constants/Theme";
+import { useLocalSearchParams } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { COLORS, SIZES } from "../../constants/Theme";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { addTaskAPI } from "../../../../api/TaskAPI/TaskAPI";
+import { updateTaskAPI, getUserTaskByIDAPI } from "../../api/TaskAPI/TaskAPI";
 import { Dropdown } from "react-native-element-dropdown";
-export default function AddTask() {
+
+export default function EditTask() {
+  const navigation = useNavigation();
+  const { taskId } = useLocalSearchParams();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     dueDate: new Date(),
     priority: "",
+    status: "",
   });
 
   const data = [
@@ -39,59 +46,166 @@ export default function AddTask() {
   const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+    const currentDate = selectedDate || formData.dueDate;
     setShow(Platform.OS === "ios");
     setFormData({ ...formData, dueDate: currentDate });
   };
 
-  const addTaskFunc = () => {
+  const editTaskFunc = () => {
+    if (!taskId) {
+      ToastAndroid.showWithGravity(
+        "Task ID missing!",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
+      return;
+    }
+
     setIsLoading(true);
-    addTaskAPI(formData).then((res) => {
-      if (res.status === 201) {
-        // console.log(res);
-        setIsLoading(false);
-        setFormData({
-          title: "",
-          description: "",
-          dueDate: new Date(),
-          priority: "",
-        });
-        ToastAndroid.showWithGravity(
-          "Task Added!",
-          ToastAndroid.SHORT,
-          ToastAndroid.CENTER
-        );
-      } else {
-        setIsLoading(false);
-        if (res?.response?.status === 400) {
-          res?.response?.data?.errors?.map((value, index) =>
-            ToastAndroid.showWithGravity(
-              value.msg,
-              ToastAndroid.SHORT,
-              ToastAndroid.CENTER
-            )
-          );
-        } else {
+    updateTaskAPI(taskId, formData)
+      .then((res) => {
+        if (res.status === 200) {
+          setIsLoading(false);
           ToastAndroid.showWithGravity(
-            res?.response?.data?.message,
+            "Task updated successfully!",
             ToastAndroid.SHORT,
             ToastAndroid.CENTER
           );
+          navigation.goBack();
+        } else {
+          setIsLoading(false);
+          if (res?.response?.status === 400) {
+            res?.response?.data?.errors?.forEach((value) =>
+              ToastAndroid.showWithGravity(
+                value.msg,
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+              )
+            );
+          } else {
+            ToastAndroid.showWithGravity(
+              res?.response?.data?.message || "Update failed",
+              ToastAndroid.SHORT,
+              ToastAndroid.CENTER
+            );
+          }
         }
-      }
-    });
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        ToastAndroid.showWithGravity(
+          "Error updating task",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
+        console.error(error);
+      });
   };
 
-  // useEffect(async () => {
+  const markCompletedFunc = () => {
+    if (!taskId) {
+      ToastAndroid.showWithGravity(
+        "Task ID missing!",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
+      return;
+    }
 
-  // },[]);
+    setIsLoading(true);
 
-  // console.log(formData);
+    // Only send the necessary fields for updating completion
+    const updatedData = { ...formData, status: "completed" };
+
+    updateTaskAPI(taskId, updatedData)
+      .then((res) => {
+        if (res.status === 200) {
+          setIsLoading(false);
+          ToastAndroid.showWithGravity(
+            "Task marked as completed!",
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER
+          );
+          navigation.goBack();
+        } else {
+          setIsLoading(false);
+          if (res?.response?.status === 400) {
+            res?.response?.data?.errors?.forEach((value) =>
+              ToastAndroid.showWithGravity(
+                value.msg,
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+              )
+            );
+          } else {
+            ToastAndroid.showWithGravity(
+              res?.response?.data?.message || "Update failed",
+              ToastAndroid.SHORT,
+              ToastAndroid.CENTER
+            );
+          }
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        ToastAndroid.showWithGravity(
+          "Error updating task",
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
+        console.error(error);
+      });
+  };
+
+  const getUserTaskByIDFunc = (taskId) => {
+    getUserTaskByIDAPI({ taskId })
+      .then((res) => {
+        if (res.status === 200) {
+          const data = res?.data?.data;
+
+          setFormData({
+            title: data?.title || "",
+            description: data?.description || "",
+            dueDate: data?.dueDate ? new Date(data.dueDate) : new Date(),
+            priority: data?.priority || "low",
+            status: data?.status || "incomplete",
+          });
+        } else {
+          console.log("Data Fetching Failed!");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching task by ID:", error);
+      });
+  };
+
+  useEffect(() => {
+    if (taskId) {
+      getUserTaskByIDFunc(taskId);
+    }
+  }, [taskId]);
 
   return (
     <ScrollView style={styles.addTaskContainer}>
       <View style={styles.continer}>
-        <Text style={styles.textAdd}>Add Task</Text>
+        <Text style={styles.textAdd}>Edit Task</Text>
+      </View>
+
+      <View style={styles.marker}>
+        {formData?.status === "incomplete" ? (
+          <TouchableOpacity
+            onPress={() => {
+              markCompletedFunc();
+            }}
+            style={styles.markerTouch}
+          >
+            <Text style={{ color: "red" }}>Mark Completed</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.markerTouch}>
+            <Text style={{ color: "green" }}>Completed</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.inputContainer}>
@@ -123,10 +237,9 @@ export default function AddTask() {
               value={formData.dueDate.toDateString()}
               editable={false}
             />
-            {/* <TouchableOpacity onPress={() => showDatepicker("start")}> */}
             <TouchableOpacity onPress={() => setShow(true)}>
               <Image
-                source={require("../../../../assets/images/calendar.png")}
+                source={require("../../assets/images/calendar.png")}
                 style={styles.calenderImgs}
               />
             </TouchableOpacity>
@@ -158,17 +271,12 @@ export default function AddTask() {
           />
         </View>
         {isLoading ? (
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Creating .....</Text>
+          <TouchableOpacity style={styles.btn} disabled>
+            <Text style={styles.btnText}>Updating .....</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => {
-              addTaskFunc();
-            }}
-          >
-            <Text style={styles.btnText}>Create a task</Text>
+          <TouchableOpacity style={styles.btn} onPress={() => editTaskFunc()}>
+            <Text style={styles.btnText}>Update task</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -177,6 +285,16 @@ export default function AddTask() {
 }
 
 const styles = StyleSheet.create({
+  marker: {
+    flexDirection: "row-reverse",
+  },
+  markerTouch: {
+    backgroundColor: COLORS.primary,
+    margin: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
   addTaskContainer: {
     flex: 1,
     backgroundColor: "white",

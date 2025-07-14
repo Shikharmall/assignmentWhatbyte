@@ -154,9 +154,7 @@ const getUserTaskByID = async (req, res) => {
   try {
     const { taskId } = req.query;
 
-    const taskData = await Task.find({
-      _id: taskId,
-    });
+    const taskData = await Task.findById(taskId);
 
     return res.status(200).json({ status: "success", data: taskData });
   } catch (error) {
@@ -169,7 +167,8 @@ const getUserTaskByID = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { taskId } = req.query;
-    const { title, description, priority } = req.body;
+    console.log(taskId);
+    const { title, description, priority, dueDate } = req.body;
 
     const taskData = await Task.updateOne(
       { _id: taskId },
@@ -185,6 +184,7 @@ const updateTask = async (req, res) => {
 
     return res.status(200).json({ status: "success", data: taskData });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ status: "failed", message: error.message });
   }
 };
