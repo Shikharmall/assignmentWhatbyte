@@ -134,18 +134,10 @@ const getAllUserDetails = async (req, res) => {
   }
 };
 
-// Logout
-const logout = async (req, res) => {
-  return res.clearCookie("access_token").status(200).json({
-    status: "success",
-    msg: "Successfully logged out.",
-  });
-};
 
 module.exports = {
   registerUser,
   loginUser,
   getUserDetails,
   getAllUserDetails,
-  logout,
 };

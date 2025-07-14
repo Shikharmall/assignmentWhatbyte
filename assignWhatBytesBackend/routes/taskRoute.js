@@ -48,8 +48,4 @@ user_route.patch("/updateTask", isLogin, taskController.updateTask);
 
 user_route.delete("/deleteTask", isLogin, taskController.deleteTask);
 
-// api for logout
-
-user_route.post("/logout", isLogin, userController.logout);
-
 module.exports = user_route;
