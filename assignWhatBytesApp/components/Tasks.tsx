@@ -40,7 +40,7 @@ export default function Tasks({ text, time, priority, status }: TaskProps) {
                         <Text
                             style={[
                                 styles.itemTime,
-                                { color: status === "Incomplete" ? "red" : "green" },
+                                { color: status === "incomplete" ? "red" : "green" },
                             ]}
                         >
                             ({status})
