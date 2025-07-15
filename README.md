@@ -20,4 +20,5 @@
    ### ENV Configuration
       EXPO_PUBLIC_ENV="LOCAL"
       EXPO_PUBLIC_API_URL="your IP address" 
-         
+
+![Alt text](https://github.com/Shikharmall/assignmentWhatbyte/blob/4b7cdb2d84719b189ec85e95278f141f8c89b39e/2.jpeg)         
