@@ -16,5 +16,8 @@
       React Native
    ### Run Locally
       npm install
-      npm run start          
+      npm run start 
+   ### ENV Configuration
+      EXPO_PUBLIC_ENV="LOCAL"
+      EXPO_PUBLIC_API_URL="your IP address" 
          
