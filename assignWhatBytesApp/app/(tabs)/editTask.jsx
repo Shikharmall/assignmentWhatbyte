@@ -188,7 +188,7 @@ export default function EditTask() {
   return (
     <ScrollView style={styles.addTaskContainer}>
       <View style={styles.continer}>
-        <Text style={styles.textAdd}>Edit Task</Text>
+        <Text style={styles.textAdd}>{formData?.title}</Text>
       </View>
 
       <View style={styles.marker}>
@@ -303,6 +303,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 40,
     alignItems: "center",
+    justifyContent: 'center',
     backgroundColor: COLORS.primary,
     paddingTop: 50,
     paddingBottom: 20,
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
   textAdd: {
     fontSize: 18,
     color: "white",
-    paddingLeft: 120,
+    //paddingLeft: 120,
     fontWeight: "bold",
   },
   inputContainer: {
