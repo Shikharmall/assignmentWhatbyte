@@ -36,7 +36,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="addtask"
         options={{
-          title: 'Add',
+          title: 'Add Task',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="add" color={color} />,
         }}
       />

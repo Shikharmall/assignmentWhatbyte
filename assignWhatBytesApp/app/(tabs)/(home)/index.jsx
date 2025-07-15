@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  BackHandler,
+  Alert,
+} from "react-native";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
@@ -11,6 +19,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Task() {
   const navigation = useNavigation();
@@ -53,6 +62,29 @@ export default function Task() {
   const onSelectStatus = (value) => {
     setStatusFilter(value);
   };
+
+  const backAction = () => {
+    Alert.alert("Hold on!", "Are you sure you want to go back?", [
+      {
+        text: "Cancel",
+        onPress: () => null,
+        style: "cancel",
+      },
+      { text: "YES", onPress: () => BackHandler.exitApp() },
+    ]);
+    return true;
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+
+      return () => backHandler.remove();
+    })
+  );
 
   return (
     <View style={{ flex: 1 }}>
