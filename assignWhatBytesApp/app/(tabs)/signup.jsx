@@ -101,6 +101,7 @@ const SignUpScreen = () => {
               style={styles.textinput}
               placeholderTextColor={COLORS.white}
               value={formData?.password}
+              secureTextEntry={true}
               onChangeText={(text) => handleChange(text, "password")}
             />
             <TextInput
@@ -108,6 +109,7 @@ const SignUpScreen = () => {
               style={styles.textinput}
               placeholderTextColor={COLORS.white}
               value={formData?.rePassword}
+              secureTextEntry={true}
               onChangeText={(text) => handleChange(text, "rePassword")}
             />
           </View>

@@ -99,6 +99,7 @@ const SignInScreen = () => {
               style={styles.textinput}
               placeholderTextColor={COLORS.white}
               value={formData?.password}
+              secureTextEntry={true}
               onChangeText={(text) => handleChange(text, "password")}
             />
           </View>
