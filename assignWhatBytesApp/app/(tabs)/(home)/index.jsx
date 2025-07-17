@@ -12,7 +12,10 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
 import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
-import { cleanAllAsyncData } from "../../../utils/asyncDataOperation";
+import {
+  cleanAllAsyncData,
+  getAsyncData,
+} from "../../../utils/asyncDataOperation";
 import {
   Menu,
   MenuOptions,
@@ -24,6 +27,7 @@ import { useFocusEffect } from "@react-navigation/native";
 export default function Task() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [userTaskData, setUserTasksData] = useState([]);
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -50,9 +54,20 @@ export default function Task() {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      getUserTasksFunc(priorityFilter, statusFilter);
-    }
+    const checkLoginStatus = async () => {
+      const loginStatus = await getAsyncData("isLogin");
+
+      if (loginStatus === "false" || loginStatus === null) {
+        navigation.navigate("signin");
+        return;
+      }
+
+      if (isFocused) {
+        getUserTasksFunc(priorityFilter, statusFilter);
+      }
+    };
+
+    checkLoginStatus();
   }, [priorityFilter, statusFilter, isFocused]);
 
   const onSelectPriority = (value) => {

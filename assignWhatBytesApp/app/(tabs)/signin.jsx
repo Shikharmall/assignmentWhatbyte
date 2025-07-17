@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import { COLORS, SIZES } from "../../constants/Theme";
 import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { userLoginAPI } from "@/api/UserAPI/UserAPI";
-import { storeAsyncData } from "../../utils/asyncDataOperation";
+import { getAsyncData, storeAsyncData } from "../../utils/asyncDataOperation";
 
 const SignInScreen = () => {
   const [formData, setFormData] = useState({
@@ -71,6 +71,18 @@ const SignInScreen = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const loginStatus = await getAsyncData("isLogin");
+
+      if (loginStatus === "true") {
+        navigation.navigate("(home)");
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -48,7 +48,6 @@ export default function AddTask() {
     setIsLoading(true);
     addTaskAPI(formData).then((res) => {
       if (res.status === 201) {
-        // console.log(res);
         setIsLoading(false);
         setFormData({
           title: "",
@@ -81,12 +80,6 @@ export default function AddTask() {
       }
     });
   };
-
-  // useEffect(async () => {
-
-  // },[]);
-
-  // console.log(formData);
 
   return (
     <ScrollView style={styles.addTaskContainer}>
@@ -123,7 +116,6 @@ export default function AddTask() {
               value={formData.dueDate.toDateString()}
               editable={false}
             />
-            {/* <TouchableOpacity onPress={() => showDatepicker("start")}> */}
             <TouchableOpacity onPress={() => setShow(true)}>
               <Image
                 source={require("../../../assets/images/calendar.png")}

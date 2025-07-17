@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -66,6 +66,18 @@ const SignUpScreen = () => {
       }
     });
   };
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const loginStatus = await getAsyncData("isLogin");
+
+      if (loginStatus === "true") {
+        navigation.navigate("(home)");
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   return (
     <View style={styles.container}>
