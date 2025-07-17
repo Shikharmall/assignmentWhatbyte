@@ -12,7 +12,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../../constants/Theme";
 import SwipeableList from "@/components/SlideableList";
 import { getUserTasksAPI, deleteTaskAPI } from "../../../api/TaskAPI/TaskAPI";
-import { deleteAsyncData } from "../../../utils/asyncDataOperation";
+import { cleanAllAsyncData } from "../../../utils/asyncDataOperation";
 import {
   Menu,
   MenuOptions,
@@ -92,9 +92,7 @@ export default function Task() {
         <View style={styles.profileView}>
           <TouchableOpacity
             onPress={async () => {
-              await deleteAsyncData("userId");
-              await deleteAsyncData("accessToken");
-              await deleteAsyncData("isLogin");
+              cleanAllAsyncData();
               navigation.navigate("signin");
             }}
           >

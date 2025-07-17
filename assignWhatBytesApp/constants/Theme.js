@@ -11,6 +11,8 @@ export const COLORS = {
     grey: '#C1C0C9',
     blue: '#087BB6',
     yellow: '#F4D03F',
+    tintColorLight: '#0a7ea4',
+    tintColorDark: '#fff'
 };
 
 export const SIZES = {
