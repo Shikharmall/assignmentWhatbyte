@@ -5,9 +5,7 @@ import { getAsyncData } from "../../utils/asyncDataOperation";
 // API to add task
 
 export const addTaskAPI = async (data) => {
-  // console.log(data);
   const token = await getAsyncData("accessToken");
-  // console.log(token);
   try {
     const result = await axios.post(`${API_URL_BASE}/addTask`, data, {
       headers: {
@@ -25,7 +23,6 @@ export const addTaskAPI = async (data) => {
 
 export const updateTaskAPI = async (taskId, data) => {
   const token = await getAsyncData("accessToken");
-  // console.log(token);
   try {
     const result = await axios.patch(
       `${API_URL_BASE}/updateTask?taskId=${taskId}`,
@@ -47,9 +44,7 @@ export const updateTaskAPI = async (taskId, data) => {
 // API to delete task
 
 export const deleteTaskAPI = async (taskId) => {
-  // console.log(data);
   const token = await getAsyncData("accessToken");
-  // console.log(token);
   try {
     const result = await axios.delete(
       `${API_URL_BASE}/deleteTask?taskId=${taskId}`,
